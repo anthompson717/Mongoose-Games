@@ -4,7 +4,7 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
+<body onload="showAll()">
 <h1>Mongoose Games</h1><img src="" >
 <div id="login">
 Username:<input type=text id="user"><br>
@@ -12,11 +12,58 @@ Password:<input type=text id="password">
 <input type=button value="Login" onClick=login()>
 </div>
 <div id="main_space">
-<h2>New releases</h2>
-<div id="recent_games">
 </div>
-<div id="top_games">
-</div>
-</div>
+<script>
+	var main = document.getElementById("main_space")
+	var login = document.getElementById("login")
+	function showAll() {
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", "controller.php?command=home", true);
+
+		ajax.send();
+		ajax.onreadystatechange = function () {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				var array = JSON.parse(ajax.responseText);
+				var str = "";
+				for (var index = 0; index < array.length; index++) {
+					str +=  "<div class=onegame onclick='showOne("+'"'+array[index]+'"'+")' ><img src='"+array[index]+"/cover.jpg'></div>" ;
+				}
+	
+				main_space.innerHTML = str;
+			}
+		}
+	}
+	function login(){
+		var user = document.getElementById("user").value
+		var pass = document.getElementById("password").value
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", "controller.php?user='"+user+"'&pass='"+pass"'", true);
+
+		ajax.send();
+		ajax.onreadystatechange = function () {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				var array = JSON.parse(ajax.responseText);
+				
+	
+				login.innerHTML = str;
+			}
+		}
+		
+	}
+	function showOne(game){
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", "controller.php?games="+game, true);
+
+		ajax.send();
+		ajax.onreadystatechange = function () {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				var array = JSON.parse(ajax.responseText);
+				var str = array;
+	
+				main_space.innerHTML = str;
+			}
+		}
+	}
+</script>
 </body>
 </html>
